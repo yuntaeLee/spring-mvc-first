@@ -30,6 +30,10 @@ public class RequestBodyStringController {
         response.getWriter().write("Ok");
     }
 
+    /**
+     * InputStream(Reader): HTTP 요청 메시지 바디의 내용을 직접 조회
+     * OutputStream(Writer): HTTP 응답 메시지의 바디에 직접 결과 출력
+     */
     @PostMapping("/request-body-string-v2")
     public void requestBodyStringV2(InputStream inputStream, Writer responseWriter) throws IOException {
         String messageBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
@@ -64,10 +68,12 @@ public class RequestBodyStringController {
 
     /**
      * @RequestBody
-     * - HTTP 메시지 바디 정보를 편리하게 조회할 수 있다.
-     * - 만약 헤더 정보가 필요하다면 HttpEntity 를 사용하거나 @RequestHeader 를 사용하면 된다.
+     * - 메시지 바디 정보를 직접 조회(@RequestParam X, @ModelAttribute X)
+     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
      *
-     * @ReponseBody 를 사용하면 응답결과를 HTTP 메시지 바디에 직접 담아서 전달할 수 있다. (view 를 사용하지 않음)
+     * @ResponseBody
+     * - 메시지 바디 정보 직접 반환(view 조회X)
+     * - HttpMessageConverter 사용 -> StringHttpMessageConverter 적용
      *
      * 요청파라미터 vs HTTP 메시지 바디
      * - 요청 파라미터를 조회하는 기능:    @RequestParam, @ModelAttribute
