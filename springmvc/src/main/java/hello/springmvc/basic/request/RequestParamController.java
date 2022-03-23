@@ -14,6 +14,9 @@ import java.util.Map;
 @Controller
 public class RequestParamController {
 
+    /**
+     * 반환 타입이 없으면서 이렇게 응답에 값을 직접 집어넣으면, view 조회X
+     */
     @RequestMapping("/request-param-v1")
     public void requestParamV1(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String username = request.getParameter("username");
@@ -24,6 +27,12 @@ public class RequestParamController {
         response.getWriter().write("Ok");
     }
 
+    /**
+     * @RequestParam 사용
+     * - 파라미터 이름으로 바인딩
+     * @ResponseBody 추가
+     * - View 조회를 무시하고, HTTP message body에 직접 해당 내용 입력
+     */
     @ResponseBody // @RestController 와 같은 효과
     @RequestMapping("/request-param-v2")
     public String requestParamV2(
@@ -34,7 +43,10 @@ public class RequestParamController {
         return "Ok";
     }
 
-    // Http Parameter 이름이 변수 이름과 같으면 @RequestParam(name = "xx") 생략 가능
+    /**
+     * @RequestParam 사용
+     * HTTP 파라미터 이름이 변수 이름과 같으면 @RequestParam(name="xx") 생략 가능
+     */
     @ResponseBody
     @RequestMapping("/request-param-v3")
     public String requestParamV3(
@@ -45,7 +57,10 @@ public class RequestParamController {
         return "Ok";
     }
 
-    // String, int, Integer 등의 단순 타입이면 @RequestParam 생략 가능
+    /**
+     * @RequestParam 사용
+     * String, int 등의 단순 타입이면 @RequestParam 도 생략 가능
+     */
     @ResponseBody
     @RequestMapping("/request-param-v4")
     public String requestParamV4(String username, int age) {
@@ -54,10 +69,16 @@ public class RequestParamController {
     }
 
     /**
-     * required 는 파라미터 필수 여부
-     * required default value = false
-     * required 가 true 면 오류가 발생하지 않는다.
-     * 파라미터 이름만 있고 값이 없는 경우 --> 빈문자로 통과
+     * @RequestParam.required
+     * /request-param -> username이 없으므로 예외
+     *
+     * 주의!
+     * /request-param?username= -> 빈문자로 통과
+     *
+     * 주의!
+     * /request-param
+     * int age -> null을 int에 입력하는 것은 불가능, 따라서 Integer 변경해야 함(또는 다음에 나오는
+    defaultValue 사용)
      */
     @ResponseBody
     @RequestMapping("/request-param-required")
@@ -70,7 +91,11 @@ public class RequestParamController {
     }
 
     /**
-     * defaultValue 는 빈문자의 경우에도 설정한 기본 값이 적용된다.
+     * @RequestParam
+     * - defaultValue 사용
+     *
+     * 참고: defaultValue는 빈 문자의 경우에도 적용
+     * /request-param?username=
      */
     @ResponseBody
     @RequestMapping("/request-param-default")
