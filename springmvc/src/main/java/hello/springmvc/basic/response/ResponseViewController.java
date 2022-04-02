@@ -27,7 +27,7 @@ public class ResponseViewController {
     }
 
     /**
-     * 권장 X
+     * 명시성이 떨어져서 권장하지 않음
      */
     @RequestMapping("/response/hello")
     public void responseViewV3(Model model) {
